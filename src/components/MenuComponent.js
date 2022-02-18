@@ -1,19 +1,24 @@
 import React from 'react'
 import {
     Card, CardImg, CardImgOverlay,
-    CardTitle
+    CardTitle, Breadcrumb, BreadcrumbItem
 } from 'reactstrap';
 //import DishDetail from './DishdetailComponent ';
 
-function RenderMenuItem(props) {
-    const { dish } = props;
+import { Link } from 'react-router-dom';
+
+function RenderMenuItem({ dish, onClick }) {
+
     return (
-        <Card key={dish.id}>
-            <CardImg width="100%" src={dish.image} alt={dish.name} />
-            <CardImgOverlay>
-                <CardTitle>{dish.name}</CardTitle>
-            </CardImgOverlay>
-        </Card>
+        <Link to={`/menu/${dish.id}`}>
+            <Card key={dish.id}>
+                <CardImg width="100%" src={dish.image} alt={dish.name} />
+                <CardImgOverlay>
+                    <CardTitle>{dish.name}</CardTitle>
+                </CardImgOverlay>
+            </Card>
+        </Link>
+
     )
 
 }
@@ -29,6 +34,15 @@ const Menu = (props) => {
 
     return (
         <div className="container">
+            <Breadcrumb>
+                <BreadcrumbItem> <Link to="/home">Home</Link></BreadcrumbItem>
+                <BreadcrumbItem active>Menu</BreadcrumbItem>   
+            </Breadcrumb>
+
+            <div className="col-12">
+                <h3>Menu</h3>
+                <hr />
+            </div>       
             <div className="row">
                 {menu}
             </div>
