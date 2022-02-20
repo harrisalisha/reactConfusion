@@ -12,6 +12,7 @@ import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
 
 import { Switch, Route, Redirect } from 'react-router-dom'
+import About from './AboutComponent';
 
 /**Route parameter
  * can be specify the using link <Link to{`/menu/${dish.id}`}>
@@ -47,6 +48,12 @@ class Main extends Component {
             comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
       );
     };
+    
+    const AboutLeaders =() => {
+      return (
+        <About leaders={this.state.leaders} />
+      )
+    }
    
     return (
       <div>
@@ -56,6 +63,7 @@ class Main extends Component {
             <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
             <Route path='/menu/:dishId' component={DishWithId} />
             <Route exact path='/contactus' component={Contact} />
+            <Route exact path='/aboutus' component={AboutLeaders} />
             <Redirect to="/home" />
         </Switch>
         <Footer />
