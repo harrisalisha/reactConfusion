@@ -6,7 +6,7 @@ import {
     Form, FormGroup, Label, Input
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom'
-import Style from '../App.css';
+import '../App.css';
 
 export default class Header extends Component {
     constructor(props) {
