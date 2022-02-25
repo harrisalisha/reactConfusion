@@ -26,8 +26,7 @@ function RenderDish({ dish }) {
         );
 }
 
-const RenderComments = ({comments}) => {
-
+function RenderComments({comments, addComment, dishId}){
     return (<>
         <h4>Comments</h4>
         {comments.map((comment) => {
@@ -38,7 +37,7 @@ const RenderComments = ({comments}) => {
                 </>
             );
         })}
-        <CommentForm />
+        <CommentForm dishId={dishId} addComment={addComment}/>
     </>)
 }
 
@@ -63,22 +62,22 @@ class CommentForm extends Component {
 
     //react-redux-form
     handleSubmit(values) {
-        console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
-        //event.preventDefault();
+
+        this.toggleForm();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
-        return (<React.Fragment>
-            <Button onClick={this.toggleForm} ><span className='fa fa-pencil'>Submit Comment</span></Button>
+        return (<>
+            <Button outline onClick={this.toggleForm} ><span className='fa fa-pencil'>Submit Comment</span></Button>
 
             <Modal toggle={this.toggleForm} isOpen={this.state.isFormOpen}>
                 <ModalHeader toggle={this.toggleForm}>Submit Comment</ModalHeader>
                 <ModalBody>
-                    <LocalForm onSubmit={this.handleSubmit}>
+                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
 
                         <Row className="form-group">
-                            <Label htmlFor="Rating">Rating</Label>
+                            <Label htmlFor="rating">Rating</Label>
                             <Field model=".rating" id="rating" name="rating" className="form-control auto">
                                 <select>
                                     <option value="1">1</option>
@@ -90,8 +89,8 @@ class CommentForm extends Component {
                             </Field>
                         </Row>
                         <Row className="form-group">
-                            <Label htmlFor="name">Your Name</Label>
-                            <Control.text model=".name" id="name" name="name" placeholder="Name" className="form-control"
+                            <Label htmlFor="author">Your Name</Label>
+                            <Control.text model=".author" id="author" name="author" placeholder="Your Name" className="form-control"
                                 validators={{
                                     required,
                                     minLength: minLength(3),
@@ -107,9 +106,9 @@ class CommentForm extends Component {
                         </Row>
                         <Row className="form-group">
                             <Label htmlFor="comment">comment</Label>
-                            <Control.textarea model=".message" id="message" name="message"
-                                rows="6"
-                                className="form-control" />
+                            <Control.textarea model=".comment" id="comment" name="comment"
+                                rows="6" className='form-control'
+                            />
                         </Row>
 
                         <Row className="form-group">
@@ -120,7 +119,7 @@ class CommentForm extends Component {
                     </LocalForm>
                 </ModalBody>
             </Modal>
-        </React.Fragment>
+        </>
         )
 
     }
@@ -147,7 +146,13 @@ const DishDetail = (props) => {
                 </div>
                 <div className="row">
                     <div className="col-12 col-md-5 m-1"> <RenderDish dish={props.dish} /></div>
-                    <div className="col-12 col-md-5 m-1"> <RenderComments comments={props.comments} /></div>
+                    <div className="col-12 col-md-5 m-1"> 
+                        <RenderComments comments={props.comments} 
+                          addComment={props.addComment}
+                          dishId={props.dish.id}
+                        />
+                        
+                    </div>
                 </div>
             </div>
         )

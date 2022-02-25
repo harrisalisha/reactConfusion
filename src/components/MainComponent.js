@@ -10,11 +10,7 @@ import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 import {connect } from 'react-redux';
 
-/**Route parameter
- * can be specify the using link <Link to{`/menu/${dish.id}`}>
- * Route passes three props to the component 
- * match,  location,   history
- */
+import { addComment } from '../redux/actionCreator';
 
 //state from redux become available as "props" in our components by connectting used connect()
  const mapStateToProps = (state) => {
@@ -26,6 +22,12 @@ import {connect } from 'react-redux';
     }
   };
 
+  //action become availabe as props , key : ()=> dispatch( actionfn())
+  const mapDispatchToProps = dispatch => ({
+  
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+  
+  });
 
 //Main component responsible for all state
 class Main extends Component {
@@ -41,7 +43,9 @@ class Main extends Component {
     const DishWithId = ({match}) => {
       return(
           <DishDetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
-            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
+            addComment={this.props.addComment}
+          />
       );
     };
     
@@ -63,4 +67,4 @@ class Main extends Component {
 }
 /***EXPLAINATION we extract comments ARRAY that match with Dish ID, NOT comment ID, 10 is base ten*/
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
