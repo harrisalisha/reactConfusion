@@ -9,8 +9,9 @@ import About from './AboutComponent';
 
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 import {connect } from 'react-redux';
-
 import { addComment, fetchDishes } from '../redux/actionCreator';
+
+import { actions } from 'react-redux-form';
 
 //state from redux become available as "props" in our components by connectting used connect()
  const mapStateToProps = (state) => {
@@ -26,7 +27,9 @@ import { addComment, fetchDishes } from '../redux/actionCreator';
   const mapDispatchToProps = dispatch => ({
   
     addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
-    fetchDishes: ()=>{ dispatch(fetchDishes())}
+    fetchDishes: ()=>{ dispatch(fetchDishes())},
+    resetFeedbackForm : ()=> {dispatch(actions.reset('feedback'))}
+    //feedback is key in configureStore for form
   });
 
 //Main component responsible for all state
@@ -69,7 +72,7 @@ class Main extends Component {
             <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
             <Route exact path='/menu' component={() => <Menu dishes={this.props.dishes} />} />
             <Route path='/menu/:dishId' component={DishWithId} />
-            <Route exact path='/contactus' component={Contact} />
+            <Route exact path='/contactus' component={()=> <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>}/>
             <Redirect to="/home" />
         </Switch>
         <Footer />
