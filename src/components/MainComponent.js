@@ -36,10 +36,7 @@ import { actions } from 'react-redux-form';
 
 //Main component responsible for all state
 class Main extends Component {
-  constructor(props){
-    super(props);
-  }
-  
+ 
   //right after commponent just mount we call fetchDishes()thunk fn
   componentDidMount(){
       this.props.fetchDishes();
