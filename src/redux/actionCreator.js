@@ -3,17 +3,48 @@ import * as ActionTypes from './actionTypes';
 import { baseUrl } from '../shared/BaseUrl';
 
 //action fn, typen payload object n pass arg if neccesary
-//the payload in a comment with 4 argument
+
 //COMMENT
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
-    payload: {
+    payload: comment
+});
+
+//THUNK
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+    const newComment = {
         dishId: dishId,
         rating: rating,
         author: author,
         comment: comment
     }
-});
+    newComment.date = new Date().toISOString();
+
+    return fetch(baseUrl + 'comments', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newComment),
+        credentials: "same-origin"
+    })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText)
+                error.response = response;
+                throw error;
+            }
+        }, error => {
+            throw error;
+        } )
+        .then(response => response.json())
+        .then(response => dispatch(addComment(response)))
+        .catch(error =>  { console.log('post comments', error.message); alert('Your comment could not be posted\nError: '+error.message); });
+}
+
+
 //Thunk
 export const fetchComments = () => (dispatch) => {
     return fetch(baseUrl + 'comments')
