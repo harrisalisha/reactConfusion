@@ -1,5 +1,6 @@
 import * as ActionTypes from './actionTypes';
-import { DISHES } from '../shared/dishes';
+
+import { baseUrl } from '../shared/BaseUrl';
 
 //action fn, typen payload object n pass arg if neccesary
 //the payload in a comment with 4 argument
@@ -13,15 +14,34 @@ export const addComment = (dishId, rating, author, comment) => ({
         comment: comment
     }
 });
+//Thunk
+export const fetchComments = () => (dispatch)=>{
+    return fetch( baseUrl + 'comments')
+        .then(response => response.json())
+        .then(comments => dispatch(addComments(comments)))
+}
+
+export const addComments = (comments)=> ({
+    type: ActionTypes.ADD_COMMENTS,
+    payload: comments
+})
+
+export const commentsFailed = (errmess)=> ({
+    type: ActionTypes.COMMENTS_FAILED,
+    payload: errmess
+})
+
+
 
 //DISHES
 //redux thunk fn, in fn has fn n can inject in this case dispatch(), dispatch fn receive action fn
+//used fetch
 export const fetchDishes = () => (dispatch)=> {
     dispatch(dishesLoading(true));
 
-    setTimeout(() => {
-        dispatch(addDishes(DISHES))
-    }, 2000)
+    return fetch(baseUrl + 'dishes')
+        .then(response => response.json())
+        .then(dishes => dispatch(addDishes(dishes)));
 };
 
 export const dishesLoading = () =>({
@@ -38,3 +58,27 @@ export const addDishes =(dishes)=> ({
     payload: dishes
 });
 
+
+//PROMOS
+//thunk
+export const fetchPromos = () => (dispatch)=> {
+    dispatch(promosLoading());
+
+    return fetch(baseUrl + 'promotions')
+        .then(response => response.json())
+        .then(promos => dispatch(addPromos(promos)));  
+}
+
+export const promosLoading = () => ({
+    type: ActionTypes.PROMOS_LOADING,
+})
+
+export const promosFailed = (errmess)=> ({
+    type: ActionTypes.PROMOS_FAILED,
+    payload: errmess
+})
+
+export const addPromos = (promos)=> ({
+    type: ActionTypes.ADD_PROMOS,
+    payload: promos
+})
