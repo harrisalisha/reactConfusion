@@ -18,6 +18,7 @@ class Contact extends Component{
     }
     
     handleSubmit(values){
+        this.props.postFeedback(values.firstname, values.lastname, values.telnum, values.email, values.agree , values.contactType, values.message);
         console.log('Current State is: ' + JSON.stringify(values));
         alert('Current State is: ' + JSON.stringify(values));
         // event.preventDefault();
@@ -199,9 +200,6 @@ class Contact extends Component{
                         
                     </div>
                </div>
-
-
-
             </div>
         );
     }
