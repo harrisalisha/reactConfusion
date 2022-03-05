@@ -48,6 +48,7 @@ function About(props) {
             </div>
         );
     }
+    
     else if (props.leaders.errMess) {
         return (
             <div className='container'>
